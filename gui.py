@@ -1,7 +1,10 @@
 import os
 import getpass
 import PySimpleGUI as sg
-from insta import *
+from defs import *
+
+MainDirectory = os.getcwd()
+
 user = getpass.getuser()
 os.chdir("/Users/" + user + "/Desktop")
 
@@ -24,6 +27,7 @@ while True:
     if len(person) > 2:
         path(person)
         GetData(person)
+        os.chdir("/Users/" + user + "/Desktop")
     else:
         print("string not long enough")
 window.close()
