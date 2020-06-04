@@ -14,3 +14,10 @@ After that, you can do
 
 inside the terminal. This should open a GUI, where you can input a instagram account. There should be a folder after that on your desktop, containing 13 pictures.<br>
 Tested on MacOs 10.12
+
+## ToDo:
+- [ ] download videos correctly
+
+- [ ] download chilrem from pictures, if its a collage
+
+- [ ] make a standalone build
