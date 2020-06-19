@@ -5,8 +5,49 @@ import requests
 import json
 import os
 import random
+import youtube_dl
+#from pytube import *
 ################
 
+#CONTROLLER
+
+def controller(values):
+    mode = values[0]
+    path = values[1]
+    url = values[2]
+    print("mode = " + mode)
+    print("path = " + path)
+    print("url = " + url)
+
+    if mode == "Youtube video (enter url)":
+        print("selected yt download mode, downloading from " + url)
+        pathDef("VideoDownload", path)
+        ydl_opts = {}
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        
+        #YouTube(url).streams.first().download(pathDef("YouTube Downloader", path)) # Imagine putting something on pippy, that doesnt fucking work
+        
+    elif mode == "Instagram - Profile (enter name)":
+        print("selected instagram profile scaper mode - downloading data from " + url)
+        pathDef(url, path)
+        Instagram(url)
+        
+    
+
+def pathDef(name, path):
+    path = path + "/" + name + "-media/"
+    
+    try:
+        os.mkdir(path)
+        os.chdir(path)
+    except:
+        print("failed to ceate directory, most likely because it already exists.")
+    print(path)
+    
+
+
+#INSTAGRAM
 def downloadpics(JSON, person):
     a = 0
     pics = []
@@ -19,18 +60,13 @@ def downloadpics(JSON, person):
     print("downloaded " + str(a) + " pictures.")
 
 
-def GetData(person):
-    proxies = prox()
-    proxy = {
-     "http": (random.choice(proxies)),
-     "http": (random.choice(proxies))
-    }
+def Instagram(person):
     url = "https://www.instagram.com/" + person + "/?__a=1"
-    r = requests.get(url, headers=headers, proxies=proxy)
+    r = requests.get(url, headers=headers)
     try:
         JSON = (r.json())
         #basic data
-        cursor = JSON["graphql"]["user"]["edge_owner_to_timeline_media"]["page_info"]["end_cursor"]# cursor, eventually used to get more pics then 12
+        cursor = JSON["graphql"]["user"]["edge_owner_to_timeline_media"]["page_info"]["end_cursor"]# cursor, eventually used to get more pics then 12. Or not.
 
         bio = JSON["graphql"]["user"]["biography"]
         sups = JSON["graphql"]["user"]["edge_followed_by"]["count"]
@@ -51,33 +87,17 @@ def GetData(person):
     except:
         print(url)
         a = 0
-def prox():
-    r = requests.get("https://api.proxyscrape.com/?request=getproxies&proxytype=http", allow_redirects=True)
-    open('proxies.txt', 'wb').write(r.content)
-    with open("proxies.txt") as f:
-        proxies = f.readlines()
-    return proxies
-##input = input("You can either do single or multi mode. If you want to do single, just enter a name. If you want to do a file, enter file:\n")
-##
-##if input == "file":
-##    print("ok, gonna check the whole file lol")
-##    with open("names.txt") as f:
-##        persons = f.readlines()
-##        for person in persons:
-##            GetData(person, proxies)
-##else:
-##    person = input
-def path(person):
-    path = person + "-media/"
+        
+def pathDef(name, path):
+    path = path + "/" + name + "-media/"
+    
     try:
         os.mkdir(path)
+        os.chdir(path)
     except:
         print("failed to ceate directory, most likely because it already exists.")
-    os.chdir(path)
-##    print("Ok, you are getting info about " + person)
-##    GetData(person, proxies)
-##
+    print(path)
+    return path
 
-#####getting proxies, idk if you can get an IP-ban
 
 
